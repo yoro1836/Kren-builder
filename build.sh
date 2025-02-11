@@ -182,7 +182,7 @@ cd $WORKDIR
 
 text=$(
     cat <<EOF
-*~~~ QuartiX CI ~~~*
+*~~~ Kren CI ~~~*
 *GKI Version*: \`$GKI_VERSION\`
 *Kernel Version*: \`$KERNEL_VERSION\`
 *Build Status*: \`$STATUS\`
