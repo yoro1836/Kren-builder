@@ -14,7 +14,7 @@ export ANYKERNEL_BRANCH="main"
 # Kernel
 export KERNEL_REPO="https://github.com/yoro1836/Kren_kernel"
 export KERNEL_BRANCH="S908EXXUBEXK5"
-export KERNEL_DEFCONFIG="waipio-gki_defconfig"
+export KERNEL_DEFCONFIG="kren_defconfig"
 
 # Releases repository
 export GKI_RELEASES_REPO="https://github.com/yoro1836/Kren_kernel"
