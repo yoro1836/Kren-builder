@@ -11,7 +11,7 @@ on:
      type: choice
      options:
      - 'None'
-     - 'OG KernelSU'
+     - 'KernelSU-Magic_Mount'
      - 'KernelSU-Next'
 
     SUSFS4KSU:
