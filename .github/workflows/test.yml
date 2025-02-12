@@ -72,7 +72,7 @@ jobs:
             export USE_KSU_SUSFS="yes"
        fi
 
-       if [[ "${{ inputs.KernelSU }}" == "OG KernelSU" ]]; then
+       if [[ "${{ inputs.KernelSU }}" == KernelSU"-Magic_Mount" ]]; then
             export USE_KSU="yes"
        elif [[ "${{ inputs.KernelSU }}" == "KernelSU-Next" ]]; then
             export USE_KSU_NEXT="yes"
