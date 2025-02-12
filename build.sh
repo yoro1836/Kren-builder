@@ -149,15 +149,15 @@ git config --global user.email "kontol@example.com"
 git config --global user.name "Your Name"
 
 # SUSFS4KSU setup
-if [[ $USE_KSU == "yes" ]] || [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
-    git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu -b gki-$GKI_VERSION $WORKDIR/susfs4ksu
-    SUSFS_PATCHES="$WORKDIR/susfs4ksu/kernel_patches"
+# if [[ $USE_KSU == "yes" ]] || [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
+#    git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu -b gki-$GKI_VERSION $WORKDIR/susfs4ksu
+#    SUSFS_PATCHES="$WORKDIR/susfs4ksu/kernel_patches"
 
-    if [[ $USE_KSU == "yes" ]]; then
-        ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU/KSUxSUSFS/g')
-    elif [[ $USE_KSU_NEXT == "yes" ]]; then
-        ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU_NEXT/KSUNxSUSFS/g')
-    fi
+#    if [[ $USE_KSU == "yes" ]]; then
+#        ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU/KSUxSUSFS/g')
+#    elif [[ $USE_KSU_NEXT == "yes" ]]; then
+#       ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU_NEXT/KSUNxSUSFS/g')
+#    fi
 
     # Copy header files (Kernel Side)
     cd $WORKDIR/common
