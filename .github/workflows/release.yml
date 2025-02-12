@@ -45,7 +45,7 @@ jobs:
           ./build.sh
 
   ksuxsusfs:
-    name: Build KSUxSuSFS variant
+    name: Build MKSUxSuSFS variant
     needs: non-ksu
     runs-on: ubuntu-latest
 
