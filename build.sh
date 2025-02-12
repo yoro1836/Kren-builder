@@ -130,7 +130,7 @@ if [[ $USE_KSU_NEXT == "yes" ]]; then
     cd $WORKDIR/KernelSU-Next
     KSU_NEXT_VERSION=$(git describe --abbrev=0 --tags)
 elif [[ $USE_KSU == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
-    curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/refs/heads/susfs-v1.5.5/kernel/setup.sh" | bash -s main
+    curl -LSs "https://github.com/rsuntk/KernelSU/blob/susfs-v1.5.5/kernel/setup.sh" | bash -s susfs-v1.5.5
     cd $WORKDIR/KernelSU
     KSU_VERSION=$(git describe --abbrev=0 --tags)
 elif [[ $USE_KSU == "yes" ]]; then
@@ -149,15 +149,15 @@ git config --global user.email "kontol@example.com"
 git config --global user.name "Your Name"
 
 # SUSFS4KSU setup
-# if [[ $USE_KSU == "yes" ]] || [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
-#    git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu -b gki-$GKI_VERSION $WORKDIR/susfs4ksu
-#    SUSFS_PATCHES="$WORKDIR/susfs4ksu/kernel_patches"
+ if [[ $USE_KSU == "yes" ]] || [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
+    git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu -b gki-$GKI_VERSION $WORKDIR/susfs4ksu
+    SUSFS_PATCHES="$WORKDIR/susfs4ksu/kernel_patches"
 
-#    if [[ $USE_KSU == "yes" ]]; then
-#        ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU/KSUxSUSFS/g')
-#    elif [[ $USE_KSU_NEXT == "yes" ]]; then
-#       ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU_NEXT/KSUNxSUSFS/g')
-#    fi
+    if [[ $USE_KSU == "yes" ]]; then
+        ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU/KSUxSUSFS/g')
+    elif [[ $USE_KSU_NEXT == "yes" ]]; then
+       ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/KSU_NEXT/KSUNxSUSFS/g')
+    fi
 
     # Copy header files (Kernel Side)
     cd $WORKDIR/common
