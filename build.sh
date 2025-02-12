@@ -130,18 +130,14 @@ if [[ $USE_KSU_NEXT == "yes" ]]; then
     cd $WORKDIR/KernelSU-Next
     KSU_NEXT_VERSION=$(git describe --abbrev=0 --tags)
 elif [[ $USE_KSU == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
-    curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
-    git clone https://github.com/rsuntk/KernelSU -b susfs-v1.5.5 $WORKDIR/ksu_tmp
-    cp -rf $WORKDIR/ksu_tmp KernelSU
-    cd $WORKDIR/KernelSU
-    KSU_VERSION=$(git describe --abbrev=0 --tags)
-elif [[ $USE_KSU == "yes" ]]; then
-    curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
-    cd $WORKDIR/KernelSU
-    KSU_VERSION=$(git describe --abbrev=0 --tags)
-elif [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU == "yes" ]]; then
+    if [[ $USE_KSU_SUSFS == "yes" ]]; then
+        curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s susfs-v1.5.5
+    else
+        curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
+    fi
+elif [[ $USE_KSU !== "yes" ]] || [[ $USE_KSU_NEXT !== "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
     echo
-    echo "error: You have to choose one, KSU or KSUN!"
+    echo "error: You have to choose one, MKSU or KSUN!"
     exit 1
 fi
 
