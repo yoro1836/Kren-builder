@@ -130,7 +130,7 @@ if [[ $USE_KSU_NEXT == "yes" ]]; then
     cd $WORKDIR/KernelSU-Next
     KSU_NEXT_VERSION=$(git describe --abbrev=0 --tags)
 elif [[ $USE_KSU == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
-    curl -LSs "https://github.com/rsuntk/KernelSU/blob/susfs-v1.5.5/kernel/setup.sh" | bash -s susfs-v1.5.5
+    curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/refs/heads/susfs-v1.5.5/kernel/setup.sh" | bash -s susfs-v1.5.5
     cd $WORKDIR/KernelSU
     KSU_VERSION=$(git describe --abbrev=0 --tags)
 elif [[ $USE_KSU == "yes" ]]; then
