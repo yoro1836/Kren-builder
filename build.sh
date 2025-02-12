@@ -149,7 +149,7 @@ git config --global user.email "kontol@example.com"
 git config --global user.name "Your Name"
 
 # SUSFS4KSU setup
-if [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
+if [[ $USE_KSU == "yes" ]] || [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
     git clone --depth=1 https://gitlab.com/simonpunk/susfs4ksu -b gki-$GKI_VERSION $WORKDIR/susfs4ksu
     SUSFS_PATCHES="$WORKDIR/susfs4ksu/kernel_patches"
 
@@ -168,13 +168,13 @@ if [[ $USE_KSU_NEXT == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
     if [[ $USE_KSU == "yes" ]]; then
         cd $WORKDIR/KernelSU
         cp $SUSFS_PATCHES/KernelSU/10_enable_susfs_for_ksu.patch .
-        patch -p1 <10_enable_susfs_for_ksu.patch || exit 1
+        patch -p1 <10_enable_susfs_for_ksu.patch
     fi
 
     # Apply patch to kernel (Kernel Side)
     cd $WORKDIR/common
     cp $SUSFS_PATCHES/50_add_susfs_in_gki-$GKI_VERSION.patch .
-    patch -p1 <50_add_susfs_in_gki-$GKI_VERSION.patch || exit 1
+    patch -p1 <50_add_susfs_in_gki-$GKI_VERSION.patch
 
     SUSFS_VERSION=$(grep -E '^#define SUSFS_VERSION' ./include/linux/susfs.h | cut -d' ' -f3 | sed 's/"//g')
 elif [[ $USE_KSU_SUSFS == "yes" ]] && [[ $USE_KSU != "yes" ]] && [[ $USE_KSU_NEXT != "yes" ]]; then
