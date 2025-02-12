@@ -135,7 +135,7 @@ elif [[ $USE_KSU == "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
     else
         curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
     fi
-elif [[ $USE_KSU !== "yes" ]] || [[ $USE_KSU_NEXT !== "yes" ]] && [[ $USE_KSU_SUSFS == "yes" ]]; then
+elif [[ $USE_KSU !== "yes" ]] || [[ $USE_KSU_NEXT != "yes" ]] && [[ $USE_KSU_SUSFS != "yes" ]]; then
     echo
     echo "error: You have to choose one, MKSU or KSUN!"
     exit 1
