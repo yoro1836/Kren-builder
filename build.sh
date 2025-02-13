@@ -62,8 +62,8 @@ send_msg() {
 
 # Add kernel variant into ZIP_NAME
 if [[ $USE_KSU == "yes" ]]; then
-    # ksu
-    ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/OPTIONE/KSU/g')
+    # ksu magic mount
+    ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/OPTIONE/MKSU/g')
 elif [[ $USE_KSU_NEXT == "yes" ]]; then
     # ksu next
     ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/OPTIONE/KSU_NEXT/g')
