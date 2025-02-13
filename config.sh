@@ -30,4 +30,4 @@ export CUSTOM_CLANG_BRANCH=""
 
 # Zip name
 export BUILD_DATE=$(date -d "$KBUILD_BUILD_TIMESTAMP" +"%y%m%d%H%M")
-export ZIP_NAME="Kren-Kernel-$BUILD_DATE.zip"
+export ZIP_NAME="Kren-Kernel-OPTIONE-$BUILD_DATE.zip"
