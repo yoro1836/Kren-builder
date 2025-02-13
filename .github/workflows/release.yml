@@ -29,14 +29,14 @@ jobs:
       - name: Set Swap Space
         uses: pierotofy/set-swap-space@master
         with:
-          swap-size-gb: 10
+          swap-size-gb: 16
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@main
         with:
             key: kernel-release
             append-timestamp: false
-            max-size: 4G
+            max-size: 10G
 
       - name: Build
         run: |
