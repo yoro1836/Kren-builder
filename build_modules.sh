@@ -92,7 +92,7 @@ send_msg "✅ Module build success! Collecting & uploading module files..."
 
 # Find and Upload Modules
 declare -a module_files=()
-find "$WORKDIR/out/lib/modules/$(KERNELRELEASE)/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
+find "$WORKDIR/out/lib/modules/$KERNELRELEASE/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
     module_files+=("$module_file")
 done
 
@@ -114,7 +114,11 @@ fi
 # GitHub Release (AnyKernel 제거, 메시지 간결화)
 TAG="$BUILD_DATE"
 RELEASE_MESSAGE="$MODULE_ZIP_NAME (Modules)"
-URL="$GKI_RELEASES_REPO/releases/${STATUS == "STABLE" && echo "$TAG" || echo "download/$TAG/$MODULE_ZIP_NAME"}"
+if [[ "$STATUS" == "STABLE" ]]; then
+  URL="$GKI_RELEASES_REPO/releases/$TAG"
+else
+  URL="$GKI_RELEASES_REPO/releases/download/$TAG/$MODULE_ZIP_NAME"
+fi
 GITHUB_USERNAME=$(echo "$GKI_RELEASES_REPO" | awk -F'https://github.com/' '{print $2}' | awk -F'/' '{print $1}')
 REPO_NAME=$(echo "$GKI_RELEASES_REPO" | awk -F'https://github.com/' '{print $2}' | awk -F'/' '{print $2}')
 
