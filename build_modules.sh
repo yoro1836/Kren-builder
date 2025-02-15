@@ -76,8 +76,8 @@ EOF
 
 # Build Modules (극초고경량화, 로그 제거)
 cd $WORKDIR/common
-make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common kren_defconfig # modules_prepare 단계는 일단 주석 처리
-make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common M=$WORKDIR/common modules
+make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig # modules_prepare 단계는 일단 주석 처리
+make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- modules
 cd $WORKDIR
 
 send_msg "✅ Module build success! Collecting & uploading module files..."
