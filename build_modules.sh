@@ -28,17 +28,17 @@ send_msg() {
 
 # --- MAIN ---
 
+# Clone Kernel Source
+git clone --depth=1 $KERNEL_REPO -b $KERNEL_BRANCH $WORKDIR/common
+
+# Extract Kernel Version
+cd $WORKDIR/common; KERNEL_VERSION=$(make kernelversion); KERNELRELEASE=$(make kernelrelease); cd $WORKDIR
+
 # Module ZIP Name (AnyKernel 제거)
 MODULE_ZIP_NAME=$(
     ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/OPTIONE-//g')
     echo "$ZIP_NAME" | sed 's/.zip/-modules.zip/g' | sed "s/KVER/$KERNEL_VERSION/g"
 )
-
-# Clone Kernel Source
-git clone --depth=1 $KERNEL_REPO -b $KERNEL_BRANCH $WORKDIR/common
-
-# Extract Kernel Version
-cd $WORKDIR/common; KERNEL_VERSION=$(make kernelversion); cd $WORKDIR
 
 # Toolchain Download & Setup
 mkdir clang
@@ -92,7 +92,7 @@ send_msg "✅ Module build success! Collecting & uploading module files..."
 
 # Find and Upload Modules
 declare -a module_files=()
-find "$WORKDIR/out/lib/modules/$KERNELRELEASE/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
+find "$WORKDIR/out/lib/modules/$KERNEL_VERSION/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
     module_files+=("$module_file")
 done
 
