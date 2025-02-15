@@ -79,9 +79,7 @@ cd common
 if [[ $BUILD_KERNEL == "yes" ]]; then
   set +e; (
     make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- $KERNEL_DEFCONFIG
-    make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- modules
-    make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- modules_install INSTALL_MOD_PATH=$WORKDIR/out # modules_install 명령어 추가
-  ) 2>&1 | tee $WORKDIR/build.log; set -e
+    make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common M=$WORKDIR/common modules
 elif [[ $GENERATE_DEFCONFIG == "yes" ]]; then # GENERATE_DEFCONFIG 제거 (이미 이전 버전에서 제거됨)
   make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- $KERNEL_DEFCONFIG
   mv $WORKDIR/out/.config $WORKDIR/config
@@ -93,7 +91,7 @@ send_msg "✅ Module build success! Collecting & uploading module files..."
 
 # Find and Upload Modules
 declare -a module_files=()
-find "$WORKDIR/out/lib/modules/$KERNELRELEASE-Kren/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
+find "$WORKDIR/common" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
   module_files+=("$module_file")
 done
 
