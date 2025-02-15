@@ -37,8 +37,8 @@ MODULE_ZIP_NAME=$(
 # Clone Kernel Source
 git clone --depth=1 $KERNEL_REPO -b $KERNEL_BRANCH $WORKDIR/common
 
-# Extract Kernel Version (수정됨)
-cd $WORKDIR/common; KERNEL_VERSION=$(make kernelversion | grep -v 'Entering directory' | grep -v 'Leaving directory' | tr -d "'"); cd $WORKDIR # 필터 추가
+# Extract Kernel Version
+cd $WORKDIR/common; KERNEL_VERSION=$(make kernelversion); cd $WORKDIR
 
 # Toolchain Download & Setup
 mkdir clang
@@ -62,7 +62,7 @@ COMPILER_STRING=$(clang -v 2>&1 | head -n 1 | sed 's/(https..*//' | sed 's/ vers
 
 git config --global user.email "kontol@example.com"; git config --global user.name "Your Name"
 
-# Telegram Message (AnyKernel 제거, 컴파일러 정보 제거)
+# Telegram Message (AnyKernel 제거)
 send_msg "$(
 cat <<EOF
 *~~~ Kren CI (Modules) ~~~*
@@ -70,19 +70,22 @@ GKI: \`$GKI_VERSION\`
 Kernel: \`$KERNEL_VERSION\`
 Status: \`$STATUS\`
 Date: \`$KBUILD_BUILD_TIMESTAMP\`
+Compiler: \`$COMPILER_STRING\`
 EOF
 )"
 
-# Build Modules (GENERATE_DEFCONFIG 제거)
+# Build Modules (수정됨)
 if [[ $BUILD_KERNEL == "yes" ]]; then
   set +e; (
-    make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig
-    make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- prepare
-    make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- modules
+    make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common kren_defconfig # -C common 추가 (수정됨)
+    make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common prepare # -C common 추가 (수정됨)
+    make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common M=$WORKDIR/common modules # -C common 유지
   ) 2>&1 | tee $WORKDIR/build.log; set -e
 fi
 
 send_msg "✅ Module build success! Collecting & uploading module files..."
+
+tree -la
 
 # Find and Upload Modules
 declare -a module_files=()
@@ -105,12 +108,16 @@ else
 fi
 
 
-# GitHub Release (AnyKernel 제거, 메시지 간결화, 변수 재사용)
+# GitHub Release (AnyKernel 제거, 메시지 간결화, URL 오류 수정)
 TAG="$BUILD_DATE"
 RELEASE_MESSAGE="$MODULE_ZIP_NAME (Modules)"
-URL="$GKI_RELEASES_REPO/releases/${STATUS == "STABLE" && echo "$TAG" || echo "download/$TAG/$MODULE_ZIP_NAME"}"
-GITHUB_USERNAME=$(echo "$GKI_RELEASES_REPO" | awk -F'https://github.com/' '{print $2}' | awk -F'/' '{print $1}') # config.sh 로 이동 가능
-REPO_NAME=$(echo "$GKI_RELEASES_REPO" | awk -F'https://github.com/' '{print $2}' | awk -F'/' '{print $2}') # config.sh 로 이동 가능
+if [[ "$STATUS" == "STABLE" ]]; then
+  URL="$GKI_RELEASES_REPO/releases/$TAG"
+else
+  URL="$GKI_RELEASES_REPO/releases/download/$TAG/$MODULE_ZIP_NAME"
+fi
+GITHUB_USERNAME=$(echo "$GKI_RELEASES_REPO" | awk -F'https://github.com/' '{print $2}' | awk -F'/' '{print $1}')
+REPO_NAME=$(echo "$GKI_RELEASES_REPO" | awk -F'https://github.com/' '{print $2}' | awk -F'/' '{print $2}')
 
 git clone --depth=1 "https://${GITHUB_USERNAME}:${GH_TOKEN}@github.com/${GITHUB_USERNAME}/${REPO_NAME}.git" rel || { echo "❌ Failed to clone GKI releases repo" && exit 1; }
 cd rel || exit 1
