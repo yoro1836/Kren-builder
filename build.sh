@@ -57,7 +57,7 @@ send_msg() {
 }
 
 # ---------------
-# 	MAIN
+#   MAIN
 # ---------------
 
 # Add kernel variant into ZIP_NAME
@@ -208,15 +208,14 @@ if [[ $BUILD_KERNEL == "yes" ]]; then
             CROSS_COMPILE_COMPAT=arm-linux-gnueabi- \
             $KERNEL_DEFCONFIG
 
-        make \
+        make -j$(nproc --all) \
             ARCH=arm64 \
             LLVM=1 \
             LLVM_IAS=1 \
             O=$WORKDIR/out \
             CROSS_COMPILE=aarch64-linux-gnu- \
             CROSS_COMPILE_COMPAT=arm-linux-gnueabi- \
-            -j$(nproc --all) \
-            Image $([ $STATUS == "STABLE" ] && echo "Image.lz4 Image.gz")
+            Image modules $([ $STATUS == "STABLE" ] && echo "Image.lz4 Image.gz")
     ) 2>&1 | tee $WORKDIR/build.log
     set -e
 elif [[ $GENERATE_DEFCONFIG == "yes" ]]; then
@@ -242,10 +241,40 @@ if ! [[ -f $KERNEL_IMAGE ]]; then
     upload_file "$WORKDIR/build.log"
     exit 1
 else
-    # Clone AnyKernel
-    git clone --depth=1 "$ANYKERNEL_REPO" -b "$ANYKERNEL_BRANCH" $WORKDIR/anykernel
+    send_msg "✅ Kernel build 성공! 모듈 파일 수집 및 업로드 시작..."
 
-    if [[ $STATUS == "STABLE" ]]; then
+    # 모듈 파일 경로를 저장할 배열 선언
+    declare -a module_files=()
+
+    # kernel 디렉토리 아래에서 .ko 파일 찾아서 배열에 추가
+    find "$WORKDIR/common/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
+        module_files+=("$module_file")
+    done
+
+    if [[ ${#module_files[@]} -gt 0 ]]; then
+        send_msg "✅ 커널 모듈 ${#module_files[@]}개 발견. 아티팩트 업로드..."
+        cd "$WORKDIR/rel" || exit 1 # 릴리즈 저장소로 이동 (rel 디렉토리가 없으면 WORKDIR 에서 계속 진행)
+
+        # 각 모듈 파일을 GitHub Release 에 아티팩트로 업로드
+        for module_file in "${module_files[@]}"; do
+            module_name=$(basename "$module_file")
+            if ! gh release upload "$TAG" "$module_file" --name "$module_name"; then
+                echo "❌ 모듈 아티팩트 업로드 실패: $module_name"
+                exit 1
+            fi
+            sleep 1 # GitHub API 요청 간 간격 (너무 빠른 요청 방지)
+        done
+        cd "$WORKDIR" || exit 1 # 원래 디렉토리로 복귀
+        send_msg "✅ 커널 모듈 아티팩트 업로드 완료!"
+    else
+        send_msg "⚠️ 업로드할 커널 모듈 파일 없음."
+    fi
+fi #  <--  기존 'else' 구문의 'fi'  (KERNEL_IMAGE 없을 때 실패 메시지)
+
+    # AnyKernel Cloning 및 부트 이미지 생성 (기존 코드)
+    if [[ $STATUS == "STABLE" ]]; then #  <--  'KERNEL_IMAGE'  존재할 때만 부트 이미지 생성하도록 조건 추가
+        git clone --depth=1 "$ANYKERNEL_REPO" -b "$ANYKERNEL_BRANCH" $WORKDIR/anykernel
+
         # Clone tools
         AOSP_MIRROR=https://android.googlesource.com
         BRANCH=main-kernel-build-2024
@@ -298,18 +327,18 @@ else
         for format in raw lz4 gz; do
 
             case $format in
-            raw)
-                kernel="./Image"
-                output="${BOOTIMG_NAME/dummy/raw}"
-                ;;
-            lz4)
-                kernel="./Image.lz4"
-                output="${BOOTIMG_NAME/dummy/lz4}"
-                ;;
-            gz)
-                kernel="./Image.gz"
-                output="${BOOTIMG_NAME/dummy/gz}"
-                ;;
+                raw)
+                    kernel="./Image"
+                    output="${BOOTIMG_NAME/dummy/raw}"
+                    ;;
+                lz4)
+                    kernel="./Image.lz4"
+                    output="${BOOTIMG_NAME/dummy/lz4}"
+                    ;;
+                gz)
+                    kernel="./Image.gz"
+                    output="${BOOTIMG_NAME/dummy/gz}"
+                    ;;
             esac
 
             # Generate and sign
@@ -317,9 +346,9 @@ else
             mv "$output" "$WORKDIR"
         done
         cd $WORKDIR
-    fi
+    fi #  <--  'if [[ $STATUS == "STABLE" ]]'  조건문 종료
 
-    # Zipping
+    # Zipping (기존 코드)
     cd $WORKDIR/anykernel
     sed -i "s/DUMMY1/$KERNEL_VERSION/g" anykernel.sh
     sed -i "s/DATE/$BUILD_DATE/g" anykernel.sh
@@ -345,7 +374,7 @@ else
     mv $ZIP_NAME $WORKDIR
     cd $WORKDIR
 
-    ## Release into GitHub
+    ## Release into GitHub (기존 코드, ZIP 파일 업로드 다시 포함)
     TAG="$BUILD_DATE"
     if [[ $STATUS == "STABLE" ]]; then
         RELEASE_MESSAGE="${ZIP_NAME%.zip}"
@@ -376,7 +405,7 @@ else
 
     sleep 2
 
-    # Upload files to release
+    # Upload files to release (ZIP 파일 및 IMG 파일 모두 다시 업로드)
     for release_file in "$WORKDIR"/*.zip "$WORKDIR"/*.img; do
         if [[ -f $release_file ]]; then
             if ! gh release upload "$TAG" "$release_file"; then
@@ -389,4 +418,3 @@ else
 
     send_msg "📦 [$RELEASE_MESSAGE]($URL)"
     exit 0
-fi
