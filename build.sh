@@ -247,7 +247,7 @@ else
     declare -a module_files=()
 
     # kernel 디렉토리 아래에서 .ko 파일 찾아서 배열에 추가
-    find "$WORKDIR/out/common/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
+    find "$WORKDIR/out/lib/modules/5.10.234-Kren/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
         module_files+=("$module_file")
     done
 
