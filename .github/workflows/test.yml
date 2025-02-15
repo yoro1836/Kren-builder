@@ -56,7 +56,7 @@ jobs:
       with:
         key: kernel-test
         max-size: 10G
-        append-timestamp: false
+        append-timestamp: true
 
     - name: Build
       env:
