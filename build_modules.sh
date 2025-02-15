@@ -53,9 +53,9 @@ COMPILER_STRING=$(clang -v 2>&1 | head -n 1 | sed 's/(https..*//' | sed 's/ vers
 
 cd $WORKDIR/common
 make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig # kren_defconfig 적용
-make prepare # 커널 준비
-KERNEL_VERSION=$(make kernelversion) # 커널 버전 추출
-KERNELRELEASE=$(make kernelrelease) # KERNELRELEASE 추출
+make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- prepare # 커널 준비
+KERNEL_VERSION=$(make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kernelversion) # 커널 버전 추출
+KERNELRELEASE=$(make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kernelrelease) # KERNELRELEASE 추출
 cd $WORKDIR
 
 # Module ZIP Name (AnyKernel 제거)
