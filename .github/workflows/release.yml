@@ -34,8 +34,8 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@main
         with:
-            key: kernel-release
-            append-timestamp: true
+            key: kernel-release-${{ hashFiles('.config') }}-${{ runner.os }}-${{ runner.arch }}
+            append-timestamp: false
             max-size: 10G
 
       - name: Build
