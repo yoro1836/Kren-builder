@@ -31,8 +31,12 @@ send_msg() {
 # Clone Kernel Source
 git clone --depth=1 $KERNEL_REPO -b $KERNEL_BRANCH $WORKDIR/common
 
-# Extract Kernel Version
-cd $WORKDIR/common; KERNEL_VERSION=$(make kernelversion); KERNELRELEASE=$(make kernelrelease); cd $WORKDIR
+cd $WORKDIR/common
+make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig # kren_defconfig 적용
+make prepare # 커널 준비
+KERNEL_VERSION=$(make kernelversion) # 커널 버전 추출
+KERNELRELEASE=$(make kernelrelease) # KERNELRELEASE 추출
+cd $WORKDIR
 
 # Module ZIP Name (AnyKernel 제거)
 MODULE_ZIP_NAME=$(
@@ -78,6 +82,7 @@ EOF
 cd common
 if [[ $BUILD_KERNEL == "yes" ]]; then
     set +e; (
+        make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- distclean
         make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- $KERNEL_DEFCONFIG
         make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- modules
     ) 2>&1 | tee $WORKDIR/build.log; set -e
