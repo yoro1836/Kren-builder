@@ -54,9 +54,9 @@ jobs:
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@main
       with:
-        key: kernel-test
+        key: kernel-test-${{ hashFiles('.config') }}-${{ runner.os }}-${{ runner.arch }}
         max-size: 10G
-        append-timestamp: true
+        append-timestamp: false
 
     - name: Build
       env:
