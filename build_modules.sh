@@ -31,19 +31,6 @@ send_msg() {
 # Clone Kernel Source
 git clone --depth=1 $KERNEL_REPO -b $KERNEL_BRANCH $WORKDIR/common
 
-cd $WORKDIR/common
-make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig # kren_defconfig 적용
-make prepare # 커널 준비
-KERNEL_VERSION=$(make kernelversion) # 커널 버전 추출
-KERNELRELEASE=$(make kernelrelease) # KERNELRELEASE 추출
-cd $WORKDIR
-
-# Module ZIP Name (AnyKernel 제거)
-MODULE_ZIP_NAME=$(
-    ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/OPTIONE-//g')
-    echo "$ZIP_NAME" | sed 's/.zip/-modules.zip/g' | sed "s/KVER/$KERNEL_VERSION/g"
-)
-
 # Toolchain Download & Setup
 mkdir clang
 CLANG_URL="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-$AOSP_CLANG_VERSION.tar.gz"
@@ -63,6 +50,19 @@ else
     export PATH="$WORKDIR/clang/bin:$PATH"
 fi
 COMPILER_STRING=$(clang -v 2>&1 | head -n 1 | sed 's/(https..*//' | sed 's/ version//')
+
+cd $WORKDIR/common
+make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig # kren_defconfig 적용
+make prepare # 커널 준비
+KERNEL_VERSION=$(make kernelversion) # 커널 버전 추출
+KERNELRELEASE=$(make kernelrelease) # KERNELRELEASE 추출
+cd $WORKDIR
+
+# Module ZIP Name (AnyKernel 제거)
+MODULE_ZIP_NAME=$(
+    ZIP_NAME=$(echo "$ZIP_NAME" | sed 's/OPTIONE-//g')
+    echo "$ZIP_NAME" | sed 's/.zip/-modules.zip/g' | sed "s/KVER/$KERNEL_VERSION/g"
+)
 
 git config --global user.email "kontol@example.com"; git config --global user.name "Your Name"
 
