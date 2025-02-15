@@ -35,7 +35,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@main
         with:
             key: kernel-release
-            append-timestamp: false
+            append-timestamp: true
             max-size: 10G
 
       - name: Build
