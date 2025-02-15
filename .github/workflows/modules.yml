@@ -19,8 +19,11 @@ jobs:
         run: |
           export MAN_DISABLE=true
           sudo apt update -y && sudo apt install bc cpio flex bison aptitude git python3 tar perl wget curl lz4 zstd libarchive-tools ccache libssl-dev -y
-          sudo pierotofy/set-swap-space@master --swap-size-gb 10
           echo "/usr/lib/ccache" >> $GITHUB_PATH
+      - name: Set Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@main
         with:
