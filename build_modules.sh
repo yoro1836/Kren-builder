@@ -86,7 +86,7 @@ tree -la
 
 # Find and Upload Modules
 declare -a module_files=()
-find "$WORKDIR/out/lib/modules/*/kernel" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
+find "$WORKDIR/out/android/kernel_modules" -name "*.ko" -print0 | while IFS= read -r -d $'\0' module_file; do
   module_files+=("$module_file")
 done
 
