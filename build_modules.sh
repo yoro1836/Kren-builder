@@ -74,9 +74,12 @@ Compiler: \`$COMPILER_STRING\`
 EOF
 )"
 
-# Build Modules (수정됨)
-make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- kren_defconfig # -C common 추가 (수정됨)
-make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- modules
+# Build Modules (조건문 제거)
+set -e; (
+  make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common kren_defconfig
+  make ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common prepare
+  make -j$(nproc --all) ARCH=arm64 LLVM=1 LLVM_IAS=1 O=$WORKDIR/out CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- -C $WORKDIR/common M=$WORKDIR/common modules
+) 2>&1 | tee $WORKDIR/build.log; set -e
 
 send_msg "✅ Module build success! Collecting & uploading module files..."
 
