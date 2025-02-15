@@ -27,9 +27,9 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@main
         with:
-          key: module-release
+          key: module-release-${{ hashFiles('.config') }}-${{ runner.os }}-${{ runner.arch }}
           max-size: 10G
-          append-timestamp: true
+          append-timestamp: false
       - name: Build Kernel Modules
         env:
           CHAT_ID: ${{ secrets.CHAT_ID }}
