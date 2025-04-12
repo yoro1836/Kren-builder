@@ -11,7 +11,7 @@ jobs:
           - { name: "Non-KSU", KernelSU: "None", SUSFS4KSU: "false", KSU_MANUAL_HOOK: "false", LAST_BUILD: "false" }
           - { name: "KSU", KernelSU: "Official", SUSFS4KSU: "false", KSU_MANUAL_HOOK: "false", LAST_BUILD: "false" }
           - { name: "KSUxSuSFS", KernelSU: "Official", SUSFS4KSU: "true", KSU_MANUAL_HOOK: "false", LAST_BUILD: "false" }
-          - { name: "KSU-Next", KernelSU: "Next", SUSFS4KSU: "false", KSU_MANUAL_HOOK: "false", LAST_BUILD: "true" }
+          - { name: "KSU-Next", KernelSU: "Next", SUSFS4KSU: "false", KSU_MANUAL_HOOK: "false", LAST_BUILD: "false" }
           - { name: "KSU-Next with SuSFS", KernelSU: "Next", SUSFS4KSU: "true", KSU_MANUAL_HOOK: "false", LAST_BUILD: "true" }
           - { name: "RKSU", KernelSU: "Rissu", SUSFS4KSU: "false", KSU_MANUAL_HOOK: "false", LAST_BUILD: "false" }
           - { name: "RKSUxSuSFS", KernelSU: "Rissu", SUSFS4KSU: "true", KSU_MANUAL_HOOK: "false", LAST_BUILD: "false" }
