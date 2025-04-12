@@ -31,7 +31,7 @@ DEFCONFIGS="
 " # Leave this empty if you don't need to merge any configs
 
 # Releases repository
-GKI_RELEASES_REPO="https://github.com/yoro1836/Kren_kernel"
+GKI_RELEASES_REPO="https://github.com/yoro1836/zero_kernel"
 
 # AOSP Clang
 USE_AOSP_CLANG="false"
