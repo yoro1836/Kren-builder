@@ -39,7 +39,7 @@ AOSP_CLANG_SOURCE="r547379" # Should be version number or direct link to clang t
 
 # Custom clang
 USE_CUSTOM_CLANG="true"
-CUSTOM_CLANG_SOURCE="https://github.com/Rv-Project/RvClang/releases/download/20.1.0/RvClang-20.1.0-bolt-pgo-full_lto.tar.gz"
+CUSTOM_CLANG_SOURCE="https://github.com/ZyCromerZ/Clang/releases/download/12.0.1-20230207-release/Clang-12.0.1-20230207.tar.gz"
 CUSTOM_CLANG_BRANCH=""
 
 # Zip name
