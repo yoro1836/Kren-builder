@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Kernel name
-KERNEL_NAME="Kren"
+KERNEL_NAME="Zero"
 
 # GKI Version
 GKI_VERSION="android12-5.10"
@@ -17,9 +17,9 @@ ANYKERNEL_REPO="https://github.com/yoro1836/Anykernel"
 ANYKERNEL_BRANCH="main"
 
 # Kernel
-KERNEL_REPO="https://github.com/yoro1836/Kren_kernel"
+KERNEL_REPO="https://github.com/yoro1836/zero_kernel"
 KERNEL_BRANCH="S908EXXUBEXK5"
-KERNEL_DEFCONFIG="kren_defconfig"
+KERNEL_DEFCONFIG="zero_defconfig"
 DEFCONFIG_FILE="$workdir/common/arch/arm64/configs/$KERNEL_DEFCONFIG"
 
 # Defconfigs would be merged in the compiling processes
