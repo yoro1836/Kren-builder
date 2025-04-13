@@ -91,6 +91,7 @@ jobs:
             ### 📢 ${{ env.RELEASE_TAG }} Build
             -> Linux ${{ env.KERNEL_VERSION }}
             -> KSU Next: ${{ env.KSU_NEXT_VERSION }}
+            -> RKSU: ${{ env.RKSU_VERSION }}
             -> OG KernelSU: ${{ env.KSU_OFC_VERSION }}
             -> SUSFS ඞ: ${{ env.SUSFS_VERSION }}
 
