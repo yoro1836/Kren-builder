@@ -34,11 +34,11 @@ DEFCONFIGS="
 GKI_RELEASES_REPO="https://github.com/yoro1836/zero_kernel"
 
 # AOSP Clang
-USE_AOSP_CLANG="false"
+USE_AOSP_CLANG="true"
 AOSP_CLANG_SOURCE="r547379" # Should be version number or direct link to clang tarball
 
 # Custom clang
-USE_CUSTOM_CLANG="true"
+USE_CUSTOM_CLANG="false"
 CUSTOM_CLANG_SOURCE="https://github.com/ZyCromerZ/Clang/releases/download/21.0.0git-20250412-release/Clang-21.0.0git-20250412.tar.gz"
 CUSTOM_CLANG_BRANCH=""
 
